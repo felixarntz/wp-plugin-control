@@ -29,8 +29,8 @@ function wppc_add_toggle_link( $actions, $plugin_file, $plugin_data, $context ) 
 	if ( is_network_admin() ) {
 		$disabled_plugins = wppc_get_all_plugins_disabled_for_network();
 
-		$enable_text        = _x( 'Network Enable', 'plugin', 'wp-plugin-control' );
-		$disable_text       = _x( 'Network Disable', 'plugin', 'wp-plugin-control' );
+		$enable_link_text   = _x( 'Network Enable', 'plugin', 'wp-plugin-control' );
+		$disable_link_text  = _x( 'Network Disable', 'plugin', 'wp-plugin-control' );
 		/* translators: %s: plugin name */
 		$enable_aria_label  = _x( 'Network Enable %s', 'plugin', 'wp-plugin-control' );
 		/* translators: %s: plugin name */
@@ -38,8 +38,8 @@ function wppc_add_toggle_link( $actions, $plugin_file, $plugin_data, $context ) 
 	} else {
 		$disabled_plugins = wppc_get_all_plugins_disabled_for_site();
 
-		$enable_text        = _x( 'Enable', 'plugin', 'wp-plugin-control' );
-		$disable_text       = _x( 'Disable', 'plugin', 'wp-plugin-control' );
+		$enable_link_text   = _x( 'Enable', 'plugin', 'wp-plugin-control' );
+		$disable_link_text  = _x( 'Disable', 'plugin', 'wp-plugin-control' );
 		/* translators: %s: plugin name */
 		$enable_aria_label  = _x( 'Enable %s', 'plugin', 'wp-plugin-control' );
 		/* translators: %s: plugin name */
@@ -47,10 +47,16 @@ function wppc_add_toggle_link( $actions, $plugin_file, $plugin_data, $context ) 
 	}
 
 	if ( in_array( $plugin_file, $disabled_plugins, true ) ) {
-		$actions['enable'] = '<a href="' . wp_nonce_url( 'plugins.php?action=enable&amp;plugin=' . $plugin_file . '&amp;plugin_status=' . $context . '&amp;paged=' . $page . '&amp;s=' . $s, 'enable-plugin_' . $plugin_file ) . '" class="edit" aria-label="' . esc_attr( sprintf( $enable_aria_label, $plugin_data['Name'] ) ) . '">' . $enable_text . '</a>';
+		$action = 'enable';
+		$link_text = $enable_link_text;
+		$aria_label = $enable_aria_label;
 	} else {
-		$actions['disable'] = '<a href="' . wp_nonce_url( 'plugins.php?action=disable&amp;plugin=' . $plugin_file . '&amp;plugin_status=' . $context . '&amp;paged=' . $page . '&amp;s=' . $s, 'disable-plugin_' . $plugin_file ) . '" class="edit" aria-label="' . esc_attr( sprintf( $disable_aria_label, $plugin_data['Name'] ) ) . '">' . $disable_text . '</a>';
+		$action = 'disable';
+		$link_text = $disable_link_text;
+		$aria_label = $disable_aria_label;
 	}
+
+	$actions[ $action ] = '<a href="' . wp_nonce_url( 'plugins.php?action=' . $action . '&amp;plugin=' . $plugin_file . '&amp;plugin_status=' . $context . '&amp;paged=' . $page . '&amp;s=' . $s, $action . '-plugin_' . $plugin_file ) . '" class="edit" aria-label="' . esc_attr( sprintf( $aria_label, $plugin_data['Name'] ) ) . '">' . $link_text . '</a>';
 
 	return $actions;
 }
