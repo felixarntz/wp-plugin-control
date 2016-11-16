@@ -1,0 +1,39 @@
+{
+  "name": "wp-plugin-control",
+  "version": "1.0.0",
+  "description": "Improves plugin control on multisite by supporting enabling and disabling of plugins per site or network.",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "control",
+    "multisite",
+    "network"
+  ],
+  "author": {
+    "name": "Felix Arntz",
+    "email": "felix-arntz@leaves-and-love.net",
+    "url": "https://leaves-and-love.net"
+  },
+  "homepage": "https://wordpress.org/plugins/wp-plugin-control/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/felixarntz/wp-plugin-control.git"
+  },
+  "bugs": {
+    "url" : "https://github.com/felixarntz/wp-plugin-control/issues"
+  },
+  "license": {
+    "type": "GPL-3.0",
+    "name": "GNU General Public License v3",
+    "url": "http://www.gnu.org/licenses/gpl-3.0.html"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-install": "^0.6.0",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-replace": "^0.5.4"
+  }
+}
