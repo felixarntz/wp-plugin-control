@@ -4,59 +4,48 @@
  * @subpackage Admin
  */
 
-function wppc_action_enable_plugin() {
+function wppc_action_toggle_plugin( $enable = true ) {
 	global $status, $page;
+
+	if ( $enable ) {
+		$action = 'enable';
+		$failure_text = __( 'Sorry, you are not allowed to enable plugins.', 'wp-plugin-control' );
+	} else {
+		$action = 'disable';
+		$failure_text = __( 'Sorry, you are not allowed to disable plugins.', 'wp-plugin-control' );
+	}
 
 	//TODO: check current screen
 
 	if ( ! current_user_can( 'toggle_plugins' ) ) {
-		wp_die( __( 'Sorry, you are not allowed to enable plugins.', 'wp-plugin-control' ) );
+		wp_die( $failure_text );
 	}
 
 	$plugin = isset($_REQUEST['plugin']) ? $_REQUEST['plugin'] : '';
 
-	check_admin_referer( 'enable-plugin_' . $plugin );
+	check_admin_referer( $action . '-plugin_' . $plugin );
 
 	if ( is_network_admin() ) {
-		$result = wppc_control_plugin_for_network( $plugin, true );
+		$result = wppc_control_plugin_for_network( $plugin, $enable );
 	} else {
-		$result = wppc_control_plugin_for_site( $plugin, true );
+		$result = wppc_control_plugin_for_site( $plugin, $enable );
 	}
 
 	$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
 	$s = isset($_REQUEST['s']) ? urlencode( wp_unslash( $_REQUEST['s'] ) ) : '';
 	$result = $result ? 'true' : 'false';
 
-	wp_redirect( self_admin_url( "plugins.php?enable=$result&plugin_status=$status&paged=$page&s=$s" ) );
+	wp_redirect( self_admin_url( "plugins.php?$action=$result&plugin_status=$status&paged=$page&s=$s" ) );
 	exit;
+}
+
+function wppc_action_enable_plugin() {
+	wppc_action_toggle_plugin( true );
 }
 add_action( 'admin_action_enable', 'wppc_action_enable_plugin' );
 
 function wppc_action_disable_plugin() {
-	global $status, $page;
-
-	//TODO: check current screen
-
-	if ( ! current_user_can( 'toggle_plugins' ) ) {
-		wp_die( __( 'Sorry, you are not allowed to disable plugins.', 'wp-plugin-control' ) );
-	}
-
-	$plugin = isset($_REQUEST['plugin']) ? $_REQUEST['plugin'] : '';
-
-	check_admin_referer( 'disable-plugin_' . $plugin );
-
-	if ( is_network_admin() ) {
-		$result = wppc_control_plugin_for_network( $plugin, false );
-	} else {
-		$result = wppc_control_plugin_for_site( $plugin, false );
-	}
-
-	$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
-	$s = isset($_REQUEST['s']) ? urlencode( wp_unslash( $_REQUEST['s'] ) ) : '';
-	$result = $result ? 'true' : 'false';
-
-	wp_redirect( self_admin_url( "plugins.php?disable=$result&plugin_status=$status&paged=$page&s=$s" ) );
-	exit;
+	wppc_action_toggle_plugin( false );
 }
 add_action( 'admin_action_disable', 'wppc_action_disable_plugin' );
 
