@@ -12,7 +12,7 @@ Stable tag:        1.0.0
 Version:           1.0.0
 License:           GNU General Public License v3
 License URI:       http://www.gnu.org/licenses/gpl-3.0.html
-Tags:              control, multisite, network
+Tags:              plugins, control, multisite, network
 
 Improves plugin control on multisite by supporting enabling and disabling of plugins per site or network.
 

@@ -10,7 +10,7 @@ License:     GNU General Public License v3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: wp-plugin-control
 Network:     true
-Tags:        control, multisite, network
+Tags:        plugins, control, multisite, network
 */
 
 function wppc_plugin_loaded() {
