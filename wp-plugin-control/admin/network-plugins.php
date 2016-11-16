@@ -7,6 +7,22 @@
 function wppc_action_toggle_plugin( $enable = true ) {
 	global $status, $page;
 
+	$screen = get_current_screen();
+
+	if ( is_network_admin() ) {
+		if ( 'plugins-network' !== $screen->id ) {
+			return;
+		}
+
+		$toggle_callback = 'wppc_toggle_plugin_for_network';
+	} else {
+		if ( 'plugins' !== $screen->id ) {
+			return;
+		}
+
+		$toggle_callback = 'wppc_toggle_plugin_for_site';
+	}
+
 	if ( $enable ) {
 		$action = 'enable';
 		$failure_text = __( 'Sorry, you are not allowed to enable plugins.', 'wp-plugin-control' );
@@ -14,8 +30,6 @@ function wppc_action_toggle_plugin( $enable = true ) {
 		$action = 'disable';
 		$failure_text = __( 'Sorry, you are not allowed to disable plugins.', 'wp-plugin-control' );
 	}
-
-	//TODO: check current screen
 
 	if ( ! current_user_can( 'toggle_plugins' ) ) {
 		wp_die( $failure_text );
@@ -25,11 +39,7 @@ function wppc_action_toggle_plugin( $enable = true ) {
 
 	check_admin_referer( $action . '-plugin_' . $plugin );
 
-	if ( is_network_admin() ) {
-		$result = wppc_toggle_plugin_for_network( $plugin, $enable );
-	} else {
-		$result = wppc_toggle_plugin_for_site( $plugin, $enable );
-	}
+	$result = call_user_func( $toggle_callback, $plugin, $enable );
 
 	$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
 	$s = isset($_REQUEST['s']) ? urlencode( wp_unslash( $_REQUEST['s'] ) ) : '';
@@ -50,7 +60,10 @@ function wppc_action_disable_plugin() {
 add_action( 'admin_action_disable', 'wppc_action_disable_plugin' );
 
 function wppc_action_notice() {
-	//TODO: check current screen
+	$screen = get_current_screen();
+	if ( ( is_network_admin() && 'plugins-network' !== $screen->id ) || ( ! is_network_admin() && 'plugins' !== $screen->id ) ) {
+		return;
+	}
 
 	if ( isset( $_GET['enable'] ) ) {
 		if ( 'true' === $_GET['enable'] ) {
