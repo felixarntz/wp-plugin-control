@@ -10,6 +10,19 @@ function wppc_toggle_plugin_for_site( $plugin_file, $enable = true, $site_id = n
 
 	$plugin_control = wppc_get_plugin_control_for_site( $site_id );
 
+	//TODO: Is this behavior rather expected or not?
+	/*if ( ! $enable && isset( $plugin_control[ $plugin_file ] ) ) {
+		$site = get_site( $site_id );
+		if ( $site ) {
+			$network_plugin_control = wppc_get_plugin_control_for_network( $site->network_id );
+			if ( isset( $network_plugin_control[ $plugin_file ] ) && ! $network_plugin_control[ $plugin_file ] ) {
+				unset( $plugin_control[ $plugin_file ] );
+
+				return update_blog_option( $site_id, 'wp_plugin_control', $plugin_control );
+			}
+		}
+	}*/
+
 	$plugin_control[ $plugin_file ] = (bool) $enable;
 
 	return update_blog_option( $site_id, 'wp_plugin_control', $plugin_control );
