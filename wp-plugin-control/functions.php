@@ -3,7 +3,7 @@
  * @package WPPluginControl
  */
 
-function wppc_control_plugin_for_site( $plugin_file, $enable = true, $site_id = null ) {
+function wppc_toggle_plugin_for_site( $plugin_file, $enable = true, $site_id = null ) {
 	if ( empty( $site_id ) ) {
 		$site_id = get_current_blog_id();
 	}
@@ -23,7 +23,7 @@ function wppc_get_plugin_control_for_site( $site_id = null ) {
 	return get_blog_option( $site_id, 'wp_plugin_control', array() );
 }
 
-function wppc_control_plugin_for_network( $plugin_file, $enable = true, $network_id = null ) {
+function wppc_toggle_plugin_for_network( $plugin_file, $enable = true, $network_id = null ) {
 	if ( empty( $network_id ) ) {
 		$network_id = get_current_network_id();
 	}

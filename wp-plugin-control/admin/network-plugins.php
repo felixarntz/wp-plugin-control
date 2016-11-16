@@ -26,9 +26,9 @@ function wppc_action_toggle_plugin( $enable = true ) {
 	check_admin_referer( $action . '-plugin_' . $plugin );
 
 	if ( is_network_admin() ) {
-		$result = wppc_control_plugin_for_network( $plugin, $enable );
+		$result = wppc_toggle_plugin_for_network( $plugin, $enable );
 	} else {
-		$result = wppc_control_plugin_for_site( $plugin, $enable );
+		$result = wppc_toggle_plugin_for_site( $plugin, $enable );
 	}
 
 	$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
