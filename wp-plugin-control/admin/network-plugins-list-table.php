@@ -62,3 +62,30 @@ function wppc_add_toggle_link( $actions, $plugin_file, $plugin_data, $context ) 
 }
 add_filter( 'plugin_action_links', 'wppc_add_toggle_link', 10, 4 );
 add_filter( 'network_admin_plugin_action_links', 'wppc_add_toggle_link', 10, 4 );
+
+function wppc_maybe_add_disabled_styles() {
+	if ( ! current_user_can( 'toggle_plugins' ) ) {
+		return;
+	}
+
+	if ( is_network_admin() ) {
+		$disabled_plugins = wppc_get_all_plugins_disabled_for_network();
+	} else {
+		$disabled_plugins = wppc_get_all_plugins_disabled_for_site();
+	}
+
+	if ( empty( $disabled_plugins ) ) {
+		return;
+	}
+
+	// This is hacky, but Core does not allow adding classes to plugin rows.
+	echo '<style type="text/css">';
+	foreach ( $disabled_plugins as $i => $plugin_file ) {
+		if ( $i > 0 ) {
+			echo ', ';
+		}
+		echo 'tr[data-plugin="' . $plugin_file . '"]';
+	}
+	echo ' { opacity: 0.5; }</style>';
+}
+add_action( 'admin_head-plugins.php', 'wppc_maybe_add_disabled_styles' );
